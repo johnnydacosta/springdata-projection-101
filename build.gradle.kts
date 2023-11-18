@@ -6,6 +6,12 @@ plugins {
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
 	kotlin("plugin.jpa") version "1.8.22"
+
+	// In order to make lazy fetching working as expected, entities should be open as described in KT-28525.
+	// Source: https://spring.io/guides/tutorials/spring-boot-kotlin/
+	kotlin("plugin.allopen") version "1.8.22"
+	// See: https://github.com/Bekzod-Murotboyev/MapStruct-Gradle-Kotlin-Spring-Boot/blob/master/README.md
+	kotlin("kapt") version "1.6.21"
 }
 
 group = "io.stemys"
@@ -24,9 +30,21 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	runtimeOnly("com.h2database:h2")
+	runtimeOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
+
+	kapt("org.mapstruct:mapstruct-processor:1.5.3.Final")
+	implementation("org.mapstruct:mapstruct:1.5.3.Final")
+
+}
+
+allOpen {
+	annotation("jakarta.persistence.Entity")
+	annotation("jakarta.persistence.Embeddable")
+	annotation("jakarta.persistence.MappedSuperclass")
 }
 
 tasks.withType<KotlinCompile> {
