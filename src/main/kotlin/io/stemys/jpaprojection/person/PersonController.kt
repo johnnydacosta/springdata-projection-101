@@ -18,7 +18,7 @@ class PersonController(
 ) {
     @GetMapping("/persons")
     @Transactional(readOnly = true)
-    fun persons(): List<Any> {
+    fun persons(): Any {
 
         return personRepository.findByLastname("doe").map { p -> personMapper.toPerson(p) }
 
@@ -35,5 +35,7 @@ class PersonController(
 //        return personDynamicProjectionRepository.findByLastname("doe", PersonWithAddress::class.java)
 
 //        return personDynamicProjectionRepository.findByLastname("doe", PersonWithAddressSummary::class.java)
+
+//        return personDynamicProjectionRepository.findAllBy(Pageable.ofSize(2), PersonWithAddressSummary::class.java)
     }
 }
